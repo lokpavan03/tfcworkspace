@@ -11,8 +11,8 @@ else
 fi
 
 # Evaluate $TFC_ORG environment variable
-if [ ! -z "$TFC_ORG" ]; then
-  organization=$TFC_ORG
+if [ ! -z "${TFC_ORG}" ]; then
+  organization="${TFC_ORG}"
   echo "Using organization, ${organization}."
 else
   echo "You must export/set the TFC_ORG environment variable."
