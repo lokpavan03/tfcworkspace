@@ -3,9 +3,6 @@ def TFC_URL= "app.terraform.io"
 
 pipeline {
     agent any
-    environment {
-
-    }
     
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
