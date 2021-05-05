@@ -22,11 +22,11 @@ pipeline {
         //createing the terraform.auto.tfvars file from the choices parameters input
         stage('Creating File') {
             steps {
-                writeFile file: '.\config\terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-$UniqueIdentifier" \
+                writeFile file: '.\config\terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-$(UniqueIdentifier)" \
                 \nresource_group_location = "${params.ResourceGroupLoaction}" \
                 \nvnet_name = "${params.VirtualNetworkName}" \
                 \nsubnet_name = "${params.SubNetName}" \
-                \nazure_virtual_machine_name = "${params.VirtualMachineName}-$UniqueIdentifier" \
+                \nazure_virtual_machine_name = "${params.VirtualMachineName}-$(UniqueIdentifier)" \
                 \nInstanceType = "${params.CHOICE}" \
                 \nadmin_vm_username = "${params.VMUserName}" \
                 \nadmin_vm_password = "${params.VMPassword}" \
