@@ -4,7 +4,7 @@ pipeline {
         UniqueIdentifier = date '+%s' 
         TFC_ORG = "loktf"
         TFC_URL = "app.terraform.io"
-    }
+    
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
         string defaultValue: 'VM001-Jenkins', description: 'Please provide the VM Name', name: 'VirtualMachineName'
@@ -47,6 +47,6 @@ pipeline {
                 sh './JenkinsWS.sh "" "" yes'
             }
         }                  
-                    
+    }         
     }
 }
