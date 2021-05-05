@@ -29,7 +29,7 @@ jobs:
       - name: Run a one-line script
         run: |
            chmod +x workspace.sh
-           ./workspace.sh testworkspace
+           ./workspace.sh loktf/testworkspace
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
