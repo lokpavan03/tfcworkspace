@@ -38,7 +38,7 @@ pipeline {
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
             steps {
-                echo  Date = "$(date +%s)" > env.UniqueIdentifier
+                echo  Date = $(date +%s) > env.UniqueIdentifier
                 TFC_ORG = "loktf"
                 TFC_URL = "app.terraform.io"
                 sh 'chmod +x ./JenkinsWS.sh'
