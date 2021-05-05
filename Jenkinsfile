@@ -1,6 +1,6 @@
 def TFC_ORG= "loktf"
 def TFC_URL= "app.terraform.io"
-def UniqueIdentifier
+def UniqueIdentifier= ${BUILD_NUMBER}
 pipeline {
     agent any
 
@@ -22,8 +22,6 @@ pipeline {
         //createing the terraform.auto.tfvars file from the choices parameters input
         stage('Creating File') {
             steps {
-                sh 'chmod +x ./date.sh' 
-                sh "./date.sh"> env.UniqueIdentifier
                 echo "UniqueIdentifier: ${UniqueIdentifier}"
                 writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${UniqueIdentifier}"\
                 \nresource_group_location = "${params.ResourceGroupLoaction}"\
