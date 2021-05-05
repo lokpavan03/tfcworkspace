@@ -32,10 +32,8 @@ jobs:
            ./workspace.sh testworkspace
         env:
           TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-          TFE_ORG: loktf
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          TFE_ORG: ${{secrets.TFE_ORG}}
+          subscription_id: ${{secrets.subscription_id}}
+          client_id: ${{secrets.subscription_id}}
+          client_secret: ${{secrets.subscription_id}}
+          tenant_id: ${{secrets.subscription_id}}
