@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        UniqueIdentifier = "$(date +%s)" 
+        UniqueIdentifier = "$(date+%s)" 
         TFC_ORG = "loktf"
         TFC_URL = "app.terraform.io"
     }
