@@ -1,5 +1,5 @@
 #!/bin/bash
-TFC_ORG= "loktf"
+TFC_ORG="loktf"
 #Terraform cloud API Token
 if [ ! -z "$Token" ]; then
   token=$Token
