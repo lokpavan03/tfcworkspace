@@ -22,7 +22,7 @@ pipeline {
         //createing the terraform.auto.tfvars file from the choices parameters input
         stage('Creating File') {
             steps {
-                def UniqueIdentifier= "workspace-${BUILD_NUMBER}"
+                UniqueIdentifier= "workspace-${BUILD_NUMBER}"
                 echo "UniqueIdentifier: ${UniqueIdentifier}"
                 writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${UniqueIdentifier}"\
                 \nresource_group_location = "${params.ResourceGroupLoaction}"\
