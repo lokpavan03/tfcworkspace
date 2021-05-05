@@ -34,6 +34,6 @@ jobs:
           TFE_TOKEN: ${{secrets.TFE_TOKEN}}
           TFE_ORG: ${{secrets.TFE_ORG}}
           subscription_id: ${{secrets.subscription_id}}
-          client_id: ${{secrets.subscription_id}}
-          client_secret: ${{secrets.subscription_id}}
-          tenant_id: ${{secrets.subscription_id}}
+          client_id: ${{secrets.client_id}}
+          client_secret: ${{secrets.client_secret}}
+          tenant_id: ${{secrets.tenant_id}}
