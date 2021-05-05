@@ -29,7 +29,7 @@ else
 fi
 
 # workspace name should not have spaces and should be set as second
-workspace="workspace-${UniqueIdentifier}"
+workspace="workspace-${BUILD_NUMBER}"
 
 # You can change sleep duration if desired
 sleep_duration=5
