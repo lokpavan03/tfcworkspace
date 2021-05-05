@@ -16,7 +16,7 @@ pipeline {
         //checkout the Github code
         stage('checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitCreds', url: 'https://github.com/lokpavan03/InfraAutoTFCAPIWFJenPar.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitCreds', url: 'https://github.com/lokpavan03/tfcworkspace.git']]])
             }
         }
         //createing the terraform.auto.tfvars file from the choices parameters input
