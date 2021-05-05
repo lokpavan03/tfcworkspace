@@ -63,7 +63,7 @@ variable "azure_virtual_machine_name" {
 variable "InstanceType" {
   type        = string
   description = "The default Instance Type is B1s, Provide the Instance Type in terraform.tfvars file if any change needed."
-  default     = "B1s"
+  default     = "Standard_B1s"
 }
 
 variable "admin_vm_username" {
