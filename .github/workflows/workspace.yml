@@ -29,7 +29,7 @@ jobs:
       - name: Run a one-line script
         run: |
            chmod +x workspace.sh
-           ./workspace.sh testworkspace
+           ./workspace.sh "" "" yes
         env:
           TFE_TOKEN: ${{secrets.TFE_TOKEN}}
           TFE_ORG: ${{secrets.TFE_ORG}}
