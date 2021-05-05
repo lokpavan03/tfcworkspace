@@ -23,7 +23,7 @@ pipeline {
         stage('Creating File') {
             steps {
                 echo ${UniqueIdentifier}
-                writeFile file: '.\config\terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${UniqueIdentifier}"\
+                writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${UniqueIdentifier}"\
                 \nresource_group_location = "${params.ResourceGroupLoaction}"\
                 \nvnet_name = "${params.VirtualNetworkName}"\
                 \nsubnet_name = "${params.SubNetName}"\
@@ -36,6 +36,7 @@ pipeline {
                 \nclient_secret = "-~_pDh0o0sF649FAfzTyyd~gl2DL4_USvA"\
                 \ntenant_id = "7f3f7804-5327-4427-ba97-e16ad406dd43"\
                 \n""" 
+                sh 'cp ./terraform.auto.tfvars ./config/'
             }
         }      
         //API hit the Terrraform cloud with CURL and retreiving Terraform API Token from the Azure Key Vault
