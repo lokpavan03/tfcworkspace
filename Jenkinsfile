@@ -22,7 +22,8 @@ pipeline {
         //createing the terraform.auto.tfvars file from the choices parameters input
         stage('Creating File') {
             steps {
-                sh 'chmod +x ./date.sh' > env.UniqueIdentifier
+                sh 'chmod +x ./date.sh' 
+                sh 'echo ./date.sh'> env.UniqueIdentifier
                 echo "UniqueIdentifier: ${UniqueIdentifier}"
                 writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${UniqueIdentifier}"\
                 \nresource_group_location = "${params.ResourceGroupLoaction}"\
