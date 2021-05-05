@@ -1,10 +1,8 @@
+def UniqueIdentifier = "$(date+%s)" 
+def TFC_ORG = "loktf"
+def TFC_URL = "app.terraform.io"
 pipeline {
     agent any
-    environment {
-        UniqueIdentifier = "$(date+%s)" 
-        TFC_ORG = "loktf"
-        TFC_URL = "app.terraform.io"
-    }
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
         string defaultValue: 'VM001-Jenkins', description: 'Please provide the VM Name', name: 'VirtualMachineName'
