@@ -48,7 +48,7 @@ pipeline {
             }
             environment{
                 TFC_ORG= ${env.TFCloud_ORG}
-                TFC_URL= ${env.TFCloud.URL}             
+                TFC_URL= ${env.TFCloud_URL}             
             }
             steps {
                 sh 'chmod +x ./JenkinsWS.sh'
