@@ -1,2 +1,6 @@
-name,Roger,terraform,false,false
+name,Lok,terraform,false,false
+subscription_id,${{secrets.subscription_id}},false,true
+client_id,${{secrets.client_id}},false,true
+client_secret,${{secrets.client_secret}},false,true
+tenant_id,${{secrets.tenant_id}},false,true
 TF_CLI_ARGS,-no-color,env,false,false
