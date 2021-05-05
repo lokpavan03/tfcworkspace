@@ -1,5 +1,5 @@
 #!/bin/bash
-TFC_ORG="loktf"
+#TFC_ORG="loktf"
 #Terraform cloud API Token
 if [ ! -z "$Token" ]; then
   token=$Token
@@ -29,7 +29,7 @@ else
 fi
 
 # workspace name should not have spaces and should be set as second
-workspace="workspace-${BUILD_NUMBER}"
+workspace="workspace-$(date +%s)"
 
 # You can change sleep duration if desired
 sleep_duration=5
