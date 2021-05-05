@@ -42,8 +42,8 @@ pipeline {
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
             steps {
-                sh 'chmod +x ./workspace.sh'
-                sh './workspace.sh "" "" yes'
+                sh 'chmod +x ./JenkinsWS.sh'
+                sh './JenkinsWS.sh "" "" yes'
             }
         }                  
                     
