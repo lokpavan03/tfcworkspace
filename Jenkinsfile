@@ -38,6 +38,7 @@ pipeline {
                 \ntenant_id = "7f3f7804-5327-4427-ba97-e16ad406dd43"\
                 \n""" 
                 sh 'cp ./terraform.auto.tfvars ./config/'
+                sh 'echo env.TFCloud_ORG'
             }
         }      
         //API hit the Terrraform cloud with CURL and retreiving Terraform API Token from the Azure Key Vault
@@ -45,9 +46,11 @@ pipeline {
             options{
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
-            steps {
+            environment{
                 TFC_ORG= env.TFCloud_ORG
-                TFC_URL= env.TFCloud.URL
+                TFC_URL= env.TFCloud.URL                
+            }
+            steps {
                 sh 'chmod +x ./JenkinsWS.sh'
                 sh './JenkinsWS.sh "" "" yes'
             }
