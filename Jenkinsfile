@@ -25,7 +25,7 @@ pipeline {
             steps {
                 writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${BUILD_NUMBER}"\
                 \nazure_virtual_machine_name = "${params.VirtualMachineName}-${BUILD_NUMBER}"\
-                \nInstanceType = "${params.choice}"\
+                \nInstanceType = "${params.InstanceType}"\
                 \nadmin_vm_username = "${params.VMUserName}"\
                 \nadmin_vm_password = "${params.VMPassword}"\
                 \nsubscription_id = "eab04c08-63fc-4336-909a-e1b7f7d8ca1e"\
