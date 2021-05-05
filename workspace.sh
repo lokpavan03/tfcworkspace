@@ -54,7 +54,7 @@ fi
 # workspace name should not have spaces and should be set as second
 # argument from CLI
 
-workspace="workspace-from-api"
+workspace="workspace-$(date +%s)"
 
 # You can change sleep duration if desired
 sleep_duration=5
