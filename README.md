@@ -1,0 +1,2 @@
+# tfcworkspace
+Terraform workspace creation
