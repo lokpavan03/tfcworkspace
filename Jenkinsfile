@@ -1,5 +1,10 @@
 pipeline {
     agent any
+        environment {
+        UniqueIdentifier = date '+%s' 
+        TFC_ORG = "loktf"
+        TFC_URL = "app.terraform.io"
+    }
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
         string defaultValue: 'VM001-Jenkins', description: 'Please provide the VM Name', name: 'VirtualMachineName'
@@ -38,9 +43,6 @@ pipeline {
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
             steps {
-                def UniqueIdentifier= date '+%s'
-                def TFC_ORG= "loktf"
-                def TFC_URL= "app.terraform.io"
                 sh 'chmod +x ./JenkinsWS.sh'
                 sh './JenkinsWS.sh "" "" yes'
             }
