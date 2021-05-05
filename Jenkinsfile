@@ -7,7 +7,7 @@ pipeline {
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
         string defaultValue: 'VM001-Jenkins', description: 'Please provide the VM Name', name: 'VirtualMachineName'
-        choice choices: ['B1s', 'DS1_v2', 'D2s_v3', 'D2as_v4', 'B2s', 'B2ms', 'B4ms', 'D4s_v3', 'DS3_v2'], description: 'Choose only one and default one is', name: 'InstanceType'
+        choice choices: ['Standard_B1s', 'DS1_v2', 'D2s_v3', 'D2as_v4', 'B2s', 'B2ms', 'B4ms', 'D4s_v3', 'DS3_v2'], description: 'Choose only one and default one is', name: 'InstanceType'
         string defaultValue: 'adminuser', description: 'Please provide the VM User Name', name: 'VMUserName'
         password defaultValue: 'Admin123', description: 'Please provide the password if you want change default', name: 'VMPassword'
     }
