@@ -1,6 +1,3 @@
-def UniqueIdentifier = "${date +%s}" 
-def TFC_ORG = "loktf"
-def TFC_URL = "app.terraform.io"
 pipeline {
     agent any
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
@@ -41,6 +38,9 @@ pipeline {
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
             steps {
+                UniqueIdentifier = "$(date +%s)" 
+                TFC_ORG = "loktf"
+                TFC_URL = "app.terraform.io"
                 sh 'chmod +x ./JenkinsWS.sh'
                 sh './JenkinsWS.sh "" "" yes'
             }
