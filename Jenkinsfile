@@ -7,6 +7,8 @@ pipeline {
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
     parameters {
         string defaultValue: 'VM001-Jenkins', description: 'Please provide the VM Name', name: 'VirtualMachineName'
+        string defaultValue: 'West Europe', description: 'Please Provide the Resource group location if you want to change', name: 'ResourceGroupLoaction'
+        string defaultValue: 'TFCloudRG001', description: 'Please Provide the Resource group name if you want to change', name: 'RescourceGroupName'        
         choice choices: ['Standard_B1s', 'DS1_v2', 'D2s_v3', 'D2as_v4', 'B2s', 'B2ms', 'B4ms', 'D4s_v3', 'DS3_v2'], description: 'Choose only one and default one is', name: 'InstanceType'
         string defaultValue: 'adminuser', description: 'Please provide the VM User Name', name: 'VMUserName'
         password defaultValue: 'Admin123', description: 'Please provide the password if you want change default', name: 'VMPassword'
@@ -22,11 +24,8 @@ pipeline {
         stage('Creating File') {
             steps {
                 writeFile file: 'terraform.auto.tfvars', text:  """resource_group_name = "${params.RescourceGroupName}-${BUILD_NUMBER}"\
-                \nresource_group_location = "${params.ResourceGroupLoaction}"\
-                \nvnet_name = "${params.VirtualNetworkName}"\
-                \nsubnet_name = "${params.SubNetName}"\
                 \nazure_virtual_machine_name = "${params.VirtualMachineName}-${BUILD_NUMBER}"\
-                \nInstanceType = "${params.CHOICE}"\
+                \nInstanceType = "${params.choice}"\
                 \nadmin_vm_username = "${params.VMUserName}"\
                 \nadmin_vm_password = "${params.VMPassword}"\
                 \nsubscription_id = "eab04c08-63fc-4336-909a-e1b7f7d8ca1e"\
