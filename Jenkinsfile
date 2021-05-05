@@ -47,8 +47,8 @@ pipeline {
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
             environment{
-                TFC_ORG= env.TFCloud_ORG
-                TFC_URL= env.TFCloud.URL                
+                TFC_ORG= ${env.TFCloud_ORG}
+                TFC_URL= ${env.TFCloud.URL}             
             }
             steps {
                 sh 'chmod +x ./JenkinsWS.sh'
