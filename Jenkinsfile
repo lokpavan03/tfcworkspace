@@ -1,10 +1,10 @@
-
+def TFC_ORG= "loktf"
+def TFC_URL= "app.terraform.io"
 
 pipeline {
     agent any
     environment {
-        TFCloud_ORG= "loktf"
-        TFCloud_URL= "app.terraform.io"
+
     }
     
     //Active Choice Parameters these values are input to the terraform.auto.tfvars
@@ -46,11 +46,8 @@ pipeline {
             options{
                 azureKeyVault(credentialID: 'AzureSP', keyVaultURL: 'https://jenkinstf.vault.azure.net/', secrets: [[envVariable: 'Token', name: 'TFAPITOKENAD', secretType: 'Secret']])
             }
-            environment{
-                TFC_ORG= ${env.TFCloud_ORG}
-                TFC_URL= ${env.TFCloud_URL}             
-            }
             steps {
+                echo $TFC_ORG
                 sh 'chmod +x ./JenkinsWS.sh'
                 sh './JenkinsWS.sh "" "" yes'
             }
