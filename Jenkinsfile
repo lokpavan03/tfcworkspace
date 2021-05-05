@@ -1,4 +1,4 @@
-def UniqueIdentifier = "${date+ %s}" 
+def UniqueIdentifier = "${date +%s}" 
 def TFC_ORG = "loktf"
 def TFC_URL = "app.terraform.io"
 pipeline {
