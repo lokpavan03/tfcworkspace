@@ -27,6 +27,7 @@ pipeline {
                 \nvnet_name = "${params.VirtualNetworkName}" \
                 \nsubnet_name = "${params.SubNetName}" \
                 \nazure_virtual_machine_name = "${params.VirtualMachineName}-${UniqueIdentifier}" \
+                \nInstanceType = "${params.CHOICE}" \
                 \nadmin_vm_username = "${params.VMUserName}" \
                 \nadmin_vm_password = "${params.VMPassword}" \
                 \nsubscription_id = "eab04c08-63fc-4336-909a-e1b7f7d8ca1e" \
