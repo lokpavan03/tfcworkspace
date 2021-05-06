@@ -28,10 +28,6 @@ pipeline {
                 \nInstanceType = "${params.InstanceType}"\
                 \nadmin_vm_username = "${params.VMUserName}"\
                 \nadmin_vm_password = "${params.VMPassword}"\
-                \nsubscription_id = "eab04c08-63fc-4336-909a-e1b7f7d8ca1e"\
-                \nclient_id = "24cad02a-ae8d-4ef2-93c8-c7a8afb31cf6"\
-                \nclient_secret = "I1iU0RphD3FOgQz~7JjCK8o1s_RW93~~NB"\
-                \ntenant_id = "7f3f7804-5327-4427-ba97-e16ad406dd43"\
                 \n""" 
                 sh 'cp ./terraform.auto.tfvars ./config/'
                 sh 'echo env.TFCloud_ORG'
