@@ -235,6 +235,151 @@ do
   upload_variable_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < ${variables_file}
 
+# List Sentinel Policies
+sentinel_list_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policies")
+sentinel_policy_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
+echo ""
+echo "Number of Sentinel policies: " $sentinel_policy_count
+
+# Do a run
+sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
+run_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
+
+# Parse run_result
+run_id=$(echo $run_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
+echo ""
+echo "Run ID: " $run_id
+
+# Check run result in loop
+continue=1
+while [ $continue -ne 0 ]; do
+  # Sleep
+  sleep $sleep_duration
+  echo ""
+  echo "Checking run status"
+
+  # Check the status of run
+  check_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id})
+
+  # Parse out the run status and is-confirmable
+  run_status=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
+  echo "Run Status: " $run_status
+  is_confirmable=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['actions']['is-confirmable'])")
+  echo "Run can be applied: " $is_confirmable
+
+  # Save plan log in some cases
+  save_plan="false"
+
+  # Apply in some cases
+  applied="false"
+
+  # Run is planning - get the plan
+  # Note that we use "True" rather than "true" because python converts the
+  # boolean "true" in json responses to "True" and "false" to "False"
+
+  # planned means plan finished and no Sentinel policies
+  # exist or are applicable to the workspace
+  if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
+    continue=0
+    echo ""
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Check the run in Terraform Enterprise UI and apply there if desired."
+    save_plan="true"
+  # cost_estimated means plan finished and costs were estimated
+  # exist or are applicable to the workspace
+  elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
+    continue=0
+    echo ""
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Check the run in Terraform Enterprise UI and apply there if desired."
+    save_plan="true"
+  elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
+    continue=0
+    echo ""
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Since override was set to \"yes\", we are applying."
+    # Do the apply
+    echo "Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
+  elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
+    continue=0
+    echo ""
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Since override was set to \"yes\", we are applying."
+    # Do the apply
+    echo "Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
+  # policy_checked means all Sentinel policies passed
+  elif [[ "$run_status" == "policy_checked" ]]; then
+    continue=0
+    # Do the apply
+    echo ""
+    echo "Policies passed. Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
+  # policy_override means at least 1 Sentinel policy failed
+  # but since $override is "yes", we will override and then apply
+  elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "yes" ]]; then
+    continue=0
+    echo ""
+    echo "Some policies failed, but overriding"
+    # Get the policy check ID
+    echo ""
+    echo "Getting policy check ID"
+    policy_result=$(curl -s --header "Authorization: Bearer $Token" https://${address}/api/v2/runs/${run_id}/policy-checks)
+    # Parse out the policy check ID
+    policy_check_id=$(echo $policy_result | python -c "import sys, json; print(json.load(sys.stdin)['data'][0]['id'])")
+    echo ""
+    echo "Policy Check ID: " $policy_check_id
+    # Override policy
+    echo ""
+    echo "Overriding policy check"
+    override_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --request POST https://${address}/api/v2/policy-checks/${policy_check_id}/actions/override)
+    # Do the apply
+    echo ""
+    echo "Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $Token" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
+  # policy_override means at least 1 Sentinel policy failed
+  # but since $override is "no", we will not override
+  # and will not apply
+  elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "no" ]]; then
+    echo ""
+    echo "Some policies failed, but will not override. Check run in Terraform Enterprise UI."
+    save_plan="true"
+    continue=0
+  # errored means that plan had an error or that a hard-mandatory
+  # policy failed
+  elif [[ "$run_status" == "errored" ]]; then
+    echo ""
+    echo "Plan errored or hard-mandatory policy failed"
+    save_plan="true"
+    continue=0
+  elif [[ "$run_status" == "planned_and_finished" ]]; then
+    echo ""
+    echo "Plan indicates no changes to apply."
+    save_plan="true"
+    continue=0
+  elif [[ "run_status" == "canceled" ]]; then
+    echo ""
+    echo "The run was canceled."
+    continue=0
+  elif [[ "run_status" == "force_canceled" ]]; then
+    echo ""
+    echo "The run was canceled forcefully."
+    continue=0
+  elif [[ "run_status" == "discarded" ]]; then
+    echo ""
+    echo "The run was discarded."
+    continue=0
+  else
+    # Sleep and then check status again in next loop
+    echo "We will sleep and try again soon."
+  fi
+done
+
 # Get the plan log if $save_plan is true
 if [[ "$save_plan" == "true" ]]; then
   echo ""
