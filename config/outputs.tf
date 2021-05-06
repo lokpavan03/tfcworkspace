@@ -1,0 +1,4 @@
+#Instance IP
+output "instance_ip_addr" {
+  value = azurerm_linux_virtual_machine.myterraformvm.private_ip_address
+}
